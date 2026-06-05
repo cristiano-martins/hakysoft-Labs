@@ -1,1 +1,0 @@
-A plataforma Hakysoft Labs foi criada exclusivamente para fins educativos, académicos e de auditoria de segurança devidamente autorizada. O uso desta plataforma para atacar sistemas sem permissão explícita dos proprietários é estritamente ilegal. Os criadores não assumem qualquer responsabilidade pelo uso indevido da plataforma.
