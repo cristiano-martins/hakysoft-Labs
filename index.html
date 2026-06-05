@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HakySoft Labs | Cyber Operations & Pentest Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap">
+    
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-blue: #00f7ff;
+            --neon-purple: #ff00ff;
+            --neon-red: #ff3131;
+            --dark-bg: #050505;
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        
+        .hacker-font { font-family: 'VT323', monospace; }
+        .neon-text { text-shadow: 0 0 8px var(--neon-green); }
+        .neon-text-blue { text-shadow: 0 0 8px var(--neon-blue); }
+        .neon-text-red { text-shadow: 0 0 8px var(--neon-red); }
+        
+        .border-green { border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.15); }
+        .border-blue { border: 1px solid var(--neon-blue); box-shadow: 0 0 10px rgba(0, 247, 255, 0.15); }
+        .border-red { border: 1px solid var(--neon-red); box-shadow: 0 0 10px rgba(255, 49, 49, 0.2); }
+        .border-purple { border: 1px solid var(--neon-purple); box-shadow: 0 0 10px rgba(255, 0, 255, 0.15); }
+
+        .neon-btn { background: transparent; transition: all 0.3s ease; }
+        .btn-purple { border: 2px solid var(--neon-purple); color: var(--neon-purple); box-shadow: 0 0 8px var(--neon-purple); }
+        .btn-purple:hover { background: var(--neon-purple); color: black; box-shadow: 0 0 20px var(--neon-purple); }
+
+        .scanline {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(57, 255, 20, 0.015) 0%, rgba(0, 0, 0, 0) 8%);
+            background-size: 100% 5px; pointer-events: none;
+            animation: scanline 6s linear infinite; z-index: 9999;
+        }
+        @keyframes scanline { 0% { transform: translateY(0); } 100% { transform: translateY(100vh); } }
+
+        .matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.06; pointer-events: none; }
+
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); }
+        .glitch::before { left: 2px; text-shadow: -2px 0 var(--neon-red); clip: rect(44px, 450px, 56px, 0); animation: glitch-1 4s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: -2px 0 var(--neon-blue); clip: rect(44px, 450px, 56px, 0); animation: glitch-2 4s infinite linear alternate-reverse; }
+        @keyframes glitch-1 { 0% { clip: rect(20px, 9999px, 60px, 0); } 100% { clip: rect(70px, 9999px, 120px, 0); } }
+        @keyframes glitch-2 { 0% { clip: rect(40px, 9999px, 80px, 0); } 100% { clip: rect(10px, 9999px, 50px, 0); } }
+
+        /* Scrollbar interna customizada para evitar deformação de caixas */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
+        ::-webkit-scrollbar-thumb { background: #39ff14; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix" class="matrix-bg"></canvas>
+    <div class="scanline"></div>
+
+    <div id="authContainer" class="min-h-screen flex flex-col justify-center items-center px-4">
+        <div class="w-full max-w-md bg-black bg-opacity-80 p-8 rounded-none border-red border-t-4">
+            <div class="text-center mb-8">
+                <div class="inline-block p-4 rounded-full bg-gray-950 mb-3 border border-red-600">
+                    <i class="fas fa-radiation text-3xl text-red-500"></i>
+                </div>
+                <h1 class="text-4xl hacker-font text-red-500 neon-text-red glitch" data-text="HAKYSOFT LABS">HAKYSOFT LABS</h1>
+                <p class="text-xs text-gray-500 uppercase tracking-widest mt-2">Sistemas de Intrusão & Inteligência Tática</p>
+            </div>
+
+            <div class="bg-red-950 bg-opacity-40 border border-red-800 p-3 mb-6 text-xs text-red-400">
+                <i class="fas fa-exclamation-triangle mr-2"></i> 
+                AVISO: Conexão monitorizada por canais encriptados. Insira chaves de acesso válidas.
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase mb-1">Operador (User)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-red-500"><i class="fas fa-user-secret"></i></span>
+                        <input type="text" id="username" class="w-full bg-gray-950 border border-gray-800 text-green-400 p-3 pl-10 focus:outline-none focus:border-red-500 font-mono text-sm" placeholder="root">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 uppercase mb-1">Chave Criptográfica (Password)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-red-500"><i class="fas fa-key"></i></span>
+                        <input type="password" id="password" class="w-full bg-gray-950 border border-gray-800 text-green-400 p-3 pl-10 focus:outline-none focus:border-red-500 font-mono text-sm" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-500 font-mono flex justify-between items-center py-1">
+                    <span>DICA: user: <b class="text-gray-400">admin</b></span>
+                    <span>pass: <b class="text-gray-400">hakysoft2026</b></span>
+                </div>
+
+                <button id="loginBtn" class="w-full py-3 neon-btn btn-purple font-bold tracking-widest text-sm uppercase">
+                    <i class="fas fa-terminal mr-2"></i> Inicializar Bypass
+                </button>
+            </div>
+            
+            <div id="loginError" class="mt-4 text-xs text-center text-red-500 hidden font-mono">
+                [ FALHA DE AUTENTICAÇÃO: CHAVE INCORRETA ]
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardContainer" class="min-h-screen flex flex-col hidden">
+        <header class="py-3 px-6 border-b border-green bg-black flex flex-col md:flex-row justify-between items-center bg-opacity-95 gap-4">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-skull-crossbones text-2xl text-green-400 neon-text"></i>
+                <span class="text-2xl hacker-font text-green-400 tracking-wider neon-text">HAKYSOFT // NET-COMMAND_v3.0</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-mono">
+                <div class="bg-gray-950 border border-blue-500 text-blue-400 px-3 py-1">
+                    <i class="far fa-clock mr-1"></i> TIME: <span id="liveClock">00:00:00</span>
+                </div>
+                <div class="bg-gray-950 border border-purple-500 text-purple-400 px-3 py-1">
+                    <i class="fas fa-hourglass-half mr-1"></i> UPTIME: <span id="sessionTimer">00m 00s</span>
+                </div>
+                <button id="logoutBtn" class="text-red-500 border border-red-900 px-3 py-1 bg-red-950 bg-opacity-20 font-bold uppercase hover:bg-red-950 transition">LOGOUT</button>
+            </div>
+        </header>
+
+        <main class="flex-grow p-4 grid grid-cols-1 xl:grid-cols-3 gap-4">
+            
+            <div class="xl:col-span-2 space-y-4 flex flex-col">
+                <div class="border border-blue bg-black bg-opacity-90 p-4 flex-grow">
+                    <div class="flex justify-between items-center border-b border-blue-900 pb-2 mb-4">
+                        <h2 class="text-md text-blue-400 font-bold uppercase tracking-wider"><i class="fas fa-crosshairs mr-2 text-red-500"></i> Repositório de Targets Estáveis (VulnHub Direct Links)</h2>
+                        <span class="text-xs text-green-400 font-mono">[Online]</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-950 p-4 border border-gray-900 hover:border-blue-400 transition-all">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-green-400 font-bold font-mono text-sm">1. Mr-Robot: 1</h3>
+                                <span class="bg-red-950 text-red-400 text-[10px] px-2 py-0.5 border border-red-800 uppercase font-bold">Hard</span>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mb-3">Máquina baseada no universo Mr. Robot. Encontre as chaves escondidas explorando WordPress mal configurado e privilégios locais.</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-900">
+                                <span class="text-[10px] font-mono text-gray-500">Vetor: WebApp / Linux Root</span>
+                                <a href="https://archive.org/download/vulnhub_mrrobot_1/mrrobot-1.ova" target="_blank" class="text-xs bg-blue-950 border border-blue-500 text-blue-400 px-3 py-1 hover:bg-blue-500 hover:text-black font-bold transition">
+                                    <i class="fas fa-download mr-1"></i> Descarregar OVA
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-950 p-4 border border-gray-900 hover:border-blue-400 transition-all">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-green-400 font-bold font-mono text-sm">2. Kioptrix: Level 1</h3>
+                                <span class="bg-green-950 text-green-400 text-[10px] px-2 py-0.5 border border-green-800 uppercase font-bold">Easy</span>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mb-3">O maior clássico de invasão de rede. Explore daemons vulneráveis Apache mod_ssl e falhas estruturais no Samba.</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-900">
+                                <span class="text-[10px] font-mono text-gray-500">Vetor: Network / Buffer Overflow</span>
+                                <a href="https://archive.org/download/vulnhub_kioptrix_1/Kioptrix_Level_1.rar" target="_blank" class="text-xs bg-blue-950 border border-blue-500 text-blue-400 px-3 py-1 hover:bg-blue-500 hover:text-black font-bold transition">
+                                    <i class="fas fa-download mr-1"></i> Descarregar RAR
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-950 p-4 border border-gray-900 hover:border-blue-400 transition-all">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-green-400 font-bold font-mono text-sm">3. DC-1 (Drupal CMS)</h3>
+                                <span class="bg-yellow-950 text-yellow-400 text-[10px] px-2 py-0.5 border border-yellow-800 uppercase font-bold">Medium</span>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mb-3">Explore falhas conhecidas de injeção de código remota (RCE) no Drupal e abuse de binários SUID para escalar a root.</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-900">
+                                <span class="text-[10px] font-mono text-gray-500">Vetor: Web / SUID Abuse</span>
+                                <a href="https://archive.org/download/vulnhub_dc_1/DC-1.zip" target="_blank" class="text-xs bg-blue-950 border border-blue-500 text-blue-400 px-3 py-1 hover:bg-blue-500 hover:text-black font-bold transition">
+                                    <i class="fas fa-download mr-1"></i> Descarregar ZIP
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-950 p-4 border border-gray-900 hover:border-blue-400 transition-all">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-green-400 font-bold font-mono text-sm">4. SickOs: 1.2</h3>
+                                <span class="bg-yellow-950 text-yellow-400 text-[10px] px-2 py-0.5 border border-yellow-800 uppercase font-bold">Medium</span>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mb-3">Infiltre e contorne firewalls rígidos. Descubra métodos HTTP inseguros habilitados para injetar e disparar uma shell reversa.</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-900">
+                                <span class="text-[10px] font-mono text-gray-500">Vetor: RCE / Firewall Bypass</span>
+                                <a href="https://archive.org/download/vulnhub_sickos_1.2/SickOs1.2.zip" target="_blank" class="text-xs bg-blue-950 border border-blue-500 text-blue-400 px-3 py-1 hover:bg-blue-500 hover:text-black font-bold transition">
+                                    <i class="fas fa-download mr-1"></i> Descarregar ZIP
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-t border-blue-900">
+                        <span class="text-xs font-mono text-blue-400 block mb-2"><i class="fas fa-database mr-1"></i> Repositórios & Índices Globais Alternativos:</span>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-[11px] font-mono">
+                            <a href="https://www.vulnhub.com" target="_blank" class="p-2 bg-gray-950 border border-gray-900 text-gray-400 hover:text-blue-400 hover:border-blue-500">VulnHub Oficial</a>
+                            <a href="https://www.hackthebox.com" target="_blank" class="p-2 bg-gray-950 border border-gray-900 text-gray-400 hover:text-blue-400 hover:border-blue-500">Hack The Box Labs</a>
+                            <a href="https://tryhackme.com" target="_blank" class="p-2 bg-gray-950 border border-gray-900 text-gray-400 hover:text-blue-400 hover:border-blue-500">TryHackMe Rooms</a>
+                            <a href="https://ctftime.org" target="_blank" class="p-2 bg-gray-950 border border-gray-900 text-gray-400 hover:text-blue-400 hover:border-blue-500">CTFTime Tracker</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-purple p-4 bg-black bg-opacity-90 font-mono text-xs">
+                    <div class="text-purple-400 font-bold mb-3 uppercase tracking-wider flex justify-between items-center">
+                        <span><i class="fas fa-wave-square mr-2 animate-pulse"></i> Monitor de Tráfego de Rede Promíscuo (eth0)</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                        <div class="bg-gray-950 p-2 border border-gray-950">
+                            <div class="text-gray-500 text-[10px]">PACKETS/S</div>
+                            <div class="text-green-400 font-bold" id="netPackets">412</div>
+                        </div>
+                        <div class="bg-gray-950 p-2 border border-gray-950">
+                            <div class="text-gray-500 text-[10px]">BANDWIDTH</div>
+                            <div class="text-blue-400 font-bold">1.8 Gbps</div>
+                        </div>
+                        <div class="bg-gray-950 p-2 border border-gray-950">
+                            <div class="text-gray-500 text-[10px]">FW DROPS</div>
+                            <div class="text-red-400 font-bold" id="netDrops">0</div>
+                        </div>
+                        <div class="bg-gray-950 p-2 border border-gray-950">
+                            <div class="text-gray-500 text-[10px]">ACTIVE CONNECTIONS</div>
+                            <div class="text-purple-400 font-bold">32</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 p-2 bg-gray-950 text-gray-400 text-[11px] h-16 overflow-hidden space-y-1" id="netSnifferStream">
+                        <div>[NET] SNIFFED: 10.0.2.15 -> ANY:80 (CAPTURING HEADERS)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <div class="border border-green bg-black p-4 flex flex-col bg-opacity-95 h-[360px] max-h-[360px]">
+                    <div class="flex items-center justify-between border-b border-gray-900 pb-2 mb-2">
+                        <div class="flex space-x-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                        </div>
+                        <span class="text-xs text-green-400 font-mono" id="terminalPrompt">kali@hakysoft:~$</span>
+                    </div>
+
+                    <div class="flex-grow font-mono text-green-400 text-[11px] overflow-y-auto space-y-1.5 p-1 pr-2" id="termOutput">
+                        <div class="text-white font-bold text-xs">[ SYSTEM TERMINAL OPERATIVE SUITE ]</div>
+                        <div>Ambiente de testes em sandbox local pronto.</div>
+                        <div class="text-yellow-400">Comandos: 'help', 'sudo su', 'nmap', 'gobuster', 'msfconsole', 'hydra'</div>
+                        <div>----------------------------------------------------------------------</div>
+                    </div>
+
+                    <div class="flex items-center border-t border-gray-900 pt-2 mt-2 font-mono text-xs">
+                        <span class="text-green-400 mr-2" id="inputArrow">$</span>
+                        <input type="text" id="termInput" class="w-full bg-transparent outline-none text-white font-mono" placeholder="Digite comandos..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="border border-gray-800 bg-black p-4 font-mono text-xs flex-grow">
+                    <div class="text-gray-400 uppercase font-bold mb-3 pb-1 border-b border-gray-900"><i class="fas fa-toolbox mr-2 text-purple-500"></i> Arsenal Técnico Integrado</div>
+                    <div class="space-y-2">
+                        <a href="https://www.exploit-db.com" target="_blank" class="block p-2 bg-gray-950 border border-gray-900 hover:border-purple-500 text-purple-400 transition"><i class="fas fa-bug mr-2"></i> Exploit-DB (Repositório de Exploits)</a>
+                        <a href="https://github.com/danielmiessler/SecLists" target="_blank" class="block p-2 bg-gray-950 border border-gray-900 hover:border-blue-500 text-blue-400 transition"><i class="fas fa-list mr-2"></i> SecLists (Wordlists Globais)</a>
+                        <a href="https://gchq.github.io/CyberChef/" target="_blank" class="block p-2 bg-gray-950 border border-gray-900 hover:border-green-500 text-green-400 transition"><i class="fas fa-mortar-pestle mr-2"></i> CyberChef (Desencriptação de Dados)</a>
+                        <a href="https://revshells.com" target="_blank" class="block p-2 bg-gray-950 border border-gray-900 hover:border-red-500 text-red-400 transition"><i class="fas fa-terminal mr-2"></i> Reverse Shell Generator (Payloads)</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-3 px-6 border-t border-green bg-black text-center font-mono text-xs text-green-600 bg-opacity-95">
+            © 2026 HAKYSOFT LABS // SUITE DE COMBATE CIBERNÉTICO E INFRAESTRUTURAS DE SEGURANÇA.
+        </footer>
+    </div>
+
+    <script>
+        // 1. Matrix Code Background Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '0123456789X⚡☣☠#$+-';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#39ff14';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 35);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // 2. Fluxo de Autenticação
+        const authContainer = document.getElementById('authContainer');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+
+        let sessionStartTime;
+        let isRoot = false;
+
+        loginBtn.addEventListener('click', performLogin);
+        document.getElementById('password').addEventListener('keypress', (e) => { if(e.key === 'Enter') performLogin(); });
+
+        function performLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+
+            if (user === "admin" && pass === "hakysoft2026") {
+                loginError.classList.add('hidden');
+                authContainer.classList.add('hidden');
+                dashboardContainer.classList.remove('hidden');
+                sessionStartTime = Date.now();
+                initTimers();
+                initNetworkMetrics();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            dashboardContainer.classList.add('hidden');
+            authContainer.classList.remove('hidden');
+            document.getElementById('password').value = '';
+        });
+
+        // 3. Relógio Ativo e Contador de Sessão
+        function initTimers() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('liveClock').innerText = now.toTimeString().split(' ')[0];
+
+                const elapsedSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
+                const minutes = Math.floor(elapsedSeconds / 60);
+                const seconds = elapsedSeconds % 60;
+                document.getElementById('sessionTimer').innerText = 
+                    `${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+            }, 1000);
+        }
+
+        // 4. Sniffer de Tráfego de Rede
+        function initNetworkMetrics() {
+            const netPackets = document.getElementById('netPackets');
+            const netDrops = document.getElementById('netDrops');
+            const netSnifferStream = document.getElementById('netSnifferStream');
+            
+            const randomIPs = ['10.0.2.15', '192.168.1.104', '172.16.2.5', '185.220.101.5'];
+            const targets = ['Mr-Robot-OVA', 'Kioptrix-Box', 'DC1-Server', 'SickOs-Node'];
+
+            setInterval(() => {
+                if(!dashboardContainer.classList.contains('hidden')) {
+                    netPackets.innerText = Math.floor(Math.random() * (460 - 380) + 380);
+                    if(Math.random() > 0.9) {
+                        netDrops.innerText = parseInt(netDrops.innerText) + 1;
+                    }
+
+                    const src = randomIPs[Math.floor(Math.random() * randomIPs.length)];
+                    const dest = targets[Math.floor(Math.random() * targets.length)];
+                    const ports = [22, 80, 443, 139, 445, 8080];
+                    const port = ports[Math.floor(Math.random() * ports.length)];
+                    
+                    netSnifferStream.innerHTML += `<div>[NET] SNIFFED: ${src} -> ${dest}:${port} (LEN: 64 PACKET OK)</div>`;
+                    if(netSnifferStream.children.length > 3) { netSnifferStream.removeChild(netSnifferStream.children[0]); }
+                }
+            }, 1500);
+        }
+
+        // 5. Consola Avançada Inteligente (Scroll Fixo Garantido)
+        const termInput = document.getElementById('termInput');
+        const termOutput = document.getElementById('termOutput');
+        const terminalPrompt = document.getElementById('terminalPrompt');
+        const inputArrow = document.getElementById('inputArrow');
+
+        termInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const rawCmd = this.value.trim();
+                const cmd = rawCmd.toLowerCase();
+                
+                const currentPrompt = isRoot ? "root@hakysoft-labs:~#" : "kali@hakysoft:~$";
+                termOutput.innerHTML += `<div><span class="text-white">${currentPrompt} ${rawCmd}</span></div>`;
+                
+                if (cmd === 'clear') {
+                    termOutput.innerHTML = '';
+                } 
+                else if (cmd === 'help') {
+                    termOutput.innerHTML += `
+                        <div><b>Arsenal Kali Linux Disponível:</b></div>
+                        <div> - <span class="text-blue-400">sudo su</span>       : Escala de privilégios para Administrador (Root)</div>
+                        <div> - <span class="text-blue-400">nmap [IP]</span>      : Varredura avançada de portas e banners de rede</div>
+                        <div> - <span class="text-blue-400">gobuster</span>       : Scanner de diretórios e arquivos em servidores web</div>
+                        <div> - <span class="text-blue-400">msfconsole</span>     : Inicialização do framework de exploração Metasploit</div>
+                        <div> - <span class="text-blue-400">hydra</span>          : Simulação de ataque de dicionário/bruteforce via SSH</div>
+                        <div> - <span class="text-blue-400">whoami</span>         : Retorna o usuário logado no terminal</div>
+                    `;
+                } 
+                else if (cmd === 'sudo su') {
+                    isRoot = true;
+                    terminalPrompt.innerText = "root@hakysoft-labs:#";
+                    terminalPrompt.className = "text-red-500 font-mono";
+                    inputArrow.innerText = "#";
+                    inputArrow.className = "text-red-500 mr-2";
+                    termOutput.innerHTML += `<div>[+] PRIVILEGES ELEVATED: Executando comandos em modo SUPERUSER (root).</div>`;
+                } 
+                else if (cmd.startsWith('nmap')) {
+                    termOutput.innerHTML += `
+                        <div>Starting Nmap 7.93 ( https://nmap.org )</div>
+                        <div>Nmap scan report for target (10.0.2.15)</div>
+                        <div>PORT     STATE SERVICE  VERSION</div>
+                        <div>22/tcp   open  ssh      OpenSSH 7.2p2 Ubuntu</div>
+                        <div>80/tcp   open  http     Apache httpd 2.4.18</div>
+                        <div>139/tcp  open  netbios  Samba smbd 3.X</div>
+                        <div>443/tcp  open  ssl/http Apache httpd 2.4.18</div>
+                        <div>Nmap done: 1 IP address scanned in 0.85 seconds</div>
+                    `;
+                } 
+                else if (cmd.startsWith('gobuster')) {
+                    termOutput.innerHTML += `
+                        <div>Gobuster v3.5 - Directory Buster Tool</div>
+                        <div>[+] Url: http://target/ | Wordlist: common.txt</div>
+                        <div>=====================================================</div>
+                        <div>/index.html           (Status: 200)</div>
+                        <div>/wp-login.php         (Status: 200) -> Painel de Login</div>
+                        <div>/secret               (Status: 403) -> Acesso Proibido</div>
+                        <div>/robots.txt           (Status: 200) [Size: 45 B]</div>
+                    `;
+                } 
+                else if (cmd === 'msfconsole') {
+                    termOutput.innerHTML += `
+                        <div class="text-purple-400">
+                           msf6 > use exploit/multi/handler
+                           msf6 exploit(multi/handler) > set payload linux/x64/meterpreter/reverse_tcp
+                           msf6 exploit(multi/handler) > show options
+                        </div>
+                        <div>[*] Handler inicializado em 0.0.0.0:4444... Aguardando conexão.</div>
+                    `;
+                }
+                else if (cmd.startsWith('hydra')) {
+                    termOutput.innerHTML += `
+                        <div>Hydra v9.4 (c) 2026 by van Hauser/THC - GNU pre-installed</div>
+                        <div>[DATA] attacking ssh://10.0.2.15:22/ - password dictionary loaded</div>
+                        <div>[22][ssh] host: 10.0.2.15  login: <span class="text-yellow-400">admin</span> - password: <span class="text-yellow-400">password123</span></div>
+                        <div>1 of 1 target successfully completed, 1 valid password found</div>
+                    `;
+                }
+                else if (cmd === 'whoami') {
+                    termOutput.innerHTML += `<div>${isRoot ? "root" : "kali"}</div>`;
+                } 
+                else if (cmd !== '') {
+                    termOutput.innerHTML += `<div class="text-red-500">bash: command not found: ${cmd}</div>`;
+                }
+
+                this.value = '';
+                // Comando crítico para forçar a barra de rolagem a descer AUTOMATICAMENTE sem esticar a tela
+                termOutput.scrollTop = termOutput.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
