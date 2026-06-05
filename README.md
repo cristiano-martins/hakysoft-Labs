@@ -1,4 +1,4 @@
-# hakysoft-Labs
+# Hakysoft-Labs
 
 O Hakysoft Labs é uma plataforma centralizada e modular desenvolvida especialmente para Hackers Éticos e profissionais de cibersegurança. O objetivo é unificar ferramentas de análise, automação de testes de penetração (pentesting) e gestão de vulnerabilidades num único ecossistema ágil, intuitivo e seguro.
 
