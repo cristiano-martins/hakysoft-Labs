@@ -37,7 +37,7 @@ Por ser uma aplicação totalmente estática (Client-Side), não precisas de ins
 
 1. Faz o clone deste repositório:
    ```bash
-   git clone [https://github.com/cristiano-martins/hakysoft-Labs.git](https://github.com/cristiano-martins/hakysoft-Labs.git)
+   git clone https://github.com/cristiano-martins/hakysoft-Labs.git
 
 
 🔑 Credenciais de Acesso
