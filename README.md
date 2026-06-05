@@ -38,3 +38,9 @@ Por ser uma aplicação totalmente estática (Client-Side), não precisas de ins
 1. Faz o clone deste repositório:
    ```bash
    git clone [https://github.com/cristiano-martins/hakysoft-Labs.git](https://github.com/cristiano-martins/hakysoft-Labs.git)
+
+
+
+   Este projeto possui fins estritamente educacionais e de portefólio para demonstração de interfaces de utilizador (UI/UX) na área de cibersegurança. Os comandos executados no terminal são simulações controladas em ambiente sandbox.
+
+Desenvolvido por Cristiano Martins © 2026.
