@@ -40,6 +40,12 @@ Por ser uma aplicação totalmente estática (Client-Side), não precisas de ins
    git clone [https://github.com/cristiano-martins/hakysoft-Labs.git](https://github.com/cristiano-martins/hakysoft-Labs.git)
 
 
+🔑 Credenciais de Acesso
+
+    Operador (User): admin
+
+    Chave (Password): hakysoft2026
+
 
    Este projeto possui fins estritamente educacionais e de portefólio para demonstração de interfaces de utilizador (UI/UX) na área de cibersegurança. Os comandos executados no terminal são simulações controladas em ambiente sandbox.
 
